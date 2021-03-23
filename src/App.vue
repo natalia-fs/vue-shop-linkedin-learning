@@ -1,7 +1,18 @@
 <template>
-  <navbar :cart="cart" :cart-total="cartTotal" :cart-qty="cartQty"></navbar>
+  <navbar
+    :cart="cart"
+    :cart-total="cartTotal"
+    :cart-qty="cartQty"
+    @deleteItem="deleteItem"
+  ></navbar>
   <div class="container">
-    <router-view :products="products" :cart="cart" @addItem="addItem" />
+    <router-view
+      :products="products"
+      :cart="cart"
+      @addItem="addItem"
+      @deleteItem="deleteItem"
+      :cart-total="cartTotal"
+    />
   </div>
 </template>
 
@@ -43,18 +54,25 @@ export default {
       } else {
         this.cart.push({ product: product, qty: 1 })
       }
+    },
+    deleteItem(id) {
+      if (this.cart[id].qty > 1) {
+        this.cart[id].qty--
+      } else {
+        this.cart.splice(id, 1)
+      }
     }
   },
   computed: {
-    cartTotal(){
-      let sum = 0;
+    cartTotal() {
+      let sum = 0
       for (let key in this.cart) {
         sum = sum + this.cart[key].product.price * this.cart[key].qty
       }
-      return sum;
+      return sum
     },
-    cartQty(){
-      let qty = 0;
+    cartQty() {
+      let qty = 0
       for (let key in this.cart) {
         qty = qty + this.cart[key].qty
       }
@@ -67,4 +85,7 @@ export default {
 <style lang="scss">
 $primary: #6f42c1;
 @import 'node_modules/bootstrap/scss/bootstrap';
+*{
+  font-size: 14px;
+}
 </style>

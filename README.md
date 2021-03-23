@@ -1,5 +1,11 @@
-# vue-shop
+# Vue-shop - (LinkedIn Learning)
 
+## Preview
+<div align="center">
+    <img src="screenshot.png" alt="Preview" />
+</div>
+
+___
 ## Project setup
 ```
 yarn install
@@ -14,11 +20,3 @@ yarn serve
 ```
 yarn build
 ```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

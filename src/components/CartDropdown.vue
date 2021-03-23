@@ -7,15 +7,28 @@
         aria-labelledby="cartDropdown"
       >
         <div v-for="(item, index) in cart" :key="index">
-          <div class="dropdown-item text-nowrap text-right align-middle">
+          <div class="dropdown-item text-nowrap text-end align-middle">
             <span class="badge bg-success align-text-top mr-1">
               {{ item.qty }}
             </span>
+            {{ item.product.name }}
+            <b>
+              <currency :amt="item.qty * Number(item.product.price)">
+              </currency>
+            </b>
+            <button
+              class="btn btn-sm btn-danger ml-2"
+              @click.stop="this.$parent.$emit('deleteItem', index)"
+            >
+              -
+            </button>
           </div>
-          {{ item.product.name }}
-          <b> <currency :amt="item.qty * Number(item.product.price)"> </currency> </b>
-
         </div>
+        <router-link
+          to="/checkout"
+          class="btn btn-sm btn-success text-white float-right mr-2 mt-2"
+          >checkout</router-link
+        >
       </div>
     </transition>
   </div>
@@ -27,7 +40,8 @@ export default {
   props: ['cart', 'displayCart'],
   components: {
     Currency
-  }
+  },
+  emits: ['deleteItem']
 }
 </script>
 
