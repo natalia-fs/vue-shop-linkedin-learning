@@ -1,43 +1,70 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
+  <navbar :cart="cart" :cart-total="cartTotal" :cart-qty="cartQty"></navbar>
   <div class="container">
-    <router-view />
+    <router-view :products="products" :cart="cart" @addItem="addItem" />
   </div>
 </template>
+
+<script>
+import Navbar from '@/components/Navbar'
+export default {
+  components: {
+    Navbar
+  },
+  data: () => {
+    return {
+      cart: [],
+      products: []
+    }
+  },
+  created() {
+    fetch('https://hplussport.com/api/products/order/price')
+      .then(response => response.json())
+      .then(data => {
+        this.products = data
+      })
+  },
+  methods: {
+    addItem(product) {
+      // eslint-disable-next-line no-unused-vars
+      let whichProduct
+      // eslint-disable-next-line no-unused-vars
+      let existing = this.cart.filter((item, index) => {
+        if (item.product.id == Number(product.id)) {
+          whichProduct = index
+          return true
+        } else {
+          return false
+        }
+      })
+
+      if (existing.length) {
+        this.cart[whichProduct].qty++
+      } else {
+        this.cart.push({ product: product, qty: 1 })
+      }
+    }
+  },
+  computed: {
+    cartTotal(){
+      let sum = 0;
+      for (let key in this.cart) {
+        sum = sum + this.cart[key].product.price * this.cart[key].qty
+      }
+      return sum;
+    },
+    cartQty(){
+      let qty = 0;
+      for (let key in this.cart) {
+        qty = qty + this.cart[key].qty
+      }
+      return qty
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 $primary: #6f42c1;
 @import 'node_modules/bootstrap/scss/bootstrap';
-
-.dropdown-clip {
-  overflow: hidden;
-}
-.dropdown-enter-active,
-.dropdown-enter-active {
-  transition: all 0.5s ease-in-out;
-  transform: auto;
-}
-
-.dropdown-enter-from,
-.dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-300px);
-}
-.products-enter-active,
-.products-leave-active {
-  transition: all 0.5s ease-in-out;
-}
-
-.products-enter-from {
-  opacity: 0;
-  transform: translateX(300px);
-}
-
-.products-leave-to {
-  opacity: 0;
-  transform: translateX(-300px);
-}
 </style>
